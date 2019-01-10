@@ -1,0 +1,17 @@
+.git
+.github
+lib
+node_modules
+src
+tmp
+tools
+.editorconfig
+.gitattributes
+.gitignore
+.npmrc
+changelog.txt
+Gruntfile.js
+tsconfig.json
+tsconfig.plugin.json
+tsconfig.theme.json
+tslint.json

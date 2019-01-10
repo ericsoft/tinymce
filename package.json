@@ -1,6 +1,6 @@
 {
-  "name": "tinymce",
-  "version": "4.9.2",
+  "name": "ericsoft-tinymce",
+  "version": "4.9.2-e001",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git"
@@ -11,7 +11,6 @@
     "url": "https://github.com/tinymce/tinymce/issues"
   },
   "license": "LGPL-2.1",
-  "private": true,
   "engines": {
     "node": ">=0.10.26"
   },

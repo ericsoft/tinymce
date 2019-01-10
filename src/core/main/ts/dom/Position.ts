@@ -5,6 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+ // Compat...
+declare const window: any;
+declare const WebKitCSSMatrix: any;
+
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Element, Node, Css, Traverse } from '@ephox/sugar';
@@ -35,9 +39,11 @@ const getTableCaptionDeltaY = function (elm) {
 };
 
 const getPos = function (body, elm, rootElm) {
-  let x = 0, y = 0, offsetParent;
   const doc = body.ownerDocument;
+  let x = 0, y = 0, offsetParent;
   let pos;
+  let style;
+  let matrix;
 
   rootElm = rootElm ? rootElm : body;
 
@@ -55,18 +61,31 @@ const getPos = function (body, elm, rootElm) {
       return { x, y };
     }
 
+    // Position
     offsetParent = elm;
     while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType) {
-      x += offsetParent.offsetLeft || 0;
-      y += offsetParent.offsetTop || 0;
-      offsetParent = offsetParent.offsetParent;
+        x += offsetParent.offsetLeft || 0;
+        y += offsetParent.offsetTop || 0;
+        offsetParent = offsetParent.offsetParent;
     }
 
+    // Traslation
+    offsetParent = elm;
+    while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType) {
+        style = window.getComputedStyle(offsetParent);
+        matrix = new WebKitCSSMatrix(style.webkitTransform);
+
+        x += matrix.m41 || 0;
+        y += matrix.m42 || 0;
+        offsetParent = offsetParent.offsetParent;
+    }
+
+    // Scroll
     offsetParent = elm.parentNode;
     while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType) {
-      x -= offsetParent.scrollLeft || 0;
-      y -= offsetParent.scrollTop || 0;
-      offsetParent = offsetParent.parentNode;
+        x -= offsetParent.scrollLeft || 0;
+        y -= offsetParent.scrollTop || 0;
+        offsetParent = offsetParent.parentNode;
     }
 
     y += getTableCaptionDeltaY(Element.fromDom(elm));
